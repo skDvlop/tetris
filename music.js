@@ -27,6 +27,7 @@ const KOROBEINIKI = [
 
 const TetrisMusic = {
   ctx: null,
+  masterGain: null,
   playing: false,
   enabled: true,
   loopTimer: null,
@@ -35,8 +36,18 @@ const TetrisMusic = {
   init() {
     if (!this.ctx) {
       this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this.masterGain = this.ctx.createGain();
+      this.masterGain.gain.value = 0;
+      this.masterGain.connect(this.ctx.destination);
     }
     this.melodyDuration = KOROBEINIKI.reduce((sum, [, dur]) => sum + dur * TEMPO_SCALE, 0);
+  },
+
+  setAudible(audible) {
+    if (!this.masterGain || !this.ctx) return;
+    const t = this.ctx.currentTime;
+    this.masterGain.gain.cancelScheduledValues(t);
+    this.masterGain.gain.setValueAtTime(audible ? 1 : 0, t);
   },
 
   playNote(freq, startTime, duration) {
@@ -51,7 +62,7 @@ const TetrisMusic = {
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration - 0.02);
 
     osc.connect(gain);
-    gain.connect(this.ctx.destination);
+    gain.connect(this.masterGain);
 
     osc.start(startTime);
     osc.stop(startTime + duration);
@@ -73,6 +84,7 @@ const TetrisMusic = {
     if (this.ctx.state === 'suspended') {
       await this.ctx.resume();
     }
+    this.setAudible(true);
     if (this.playing) return;
 
     this.playing = true;
@@ -91,18 +103,19 @@ const TetrisMusic = {
       clearTimeout(this.loopTimer);
       this.loopTimer = null;
     }
+    this.setAudible(false);
   },
 
   pause() {
     this.stop();
   },
 
-  toggle() {
+  toggle(shouldPlayNow = false) {
     this.enabled = !this.enabled;
-    if (this.enabled) {
-      this.start();
-    } else {
+    if (!this.enabled) {
       this.stop();
+    } else if (shouldPlayNow) {
+      this.start();
     }
     return this.enabled;
   },

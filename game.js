@@ -343,7 +343,7 @@ function updateMusicButton() {
 }
 
 function toggleMusic() {
-  TetrisMusic.toggle();
+  TetrisMusic.toggle(gameState === 'playing');
   updateMusicButton();
 }
 

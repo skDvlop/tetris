@@ -258,3 +258,18 @@ README.md 파일에 github pages 주소를 기록하고 commit log에도 github 
 
 - 사이드 패널 **음악 끄기 / 음악 켜기** 버튼 추가, `TetrisMusic.toggle()`·`enabled` 플래그 구현.
 - `kosa-vibecoding-2026-5th` 및 `skDvlop/tetris` 양쪽 repo commit & push → GitHub Pages 반영.
+
+---
+
+## 2026-08-21 — 음악 끄기 실제 동작 수정
+
+### 프롬프트
+
+```
+버튼만 있고 음악 끄는 기능은 안 넣어준것 같은데 실제로 음악 끄기 켜기 버튼을 누르면 음악이 종료되거나 켜져야해 .
+```
+
+### 결과 (요약)
+
+- `stop()`이 루프 타이머만 멈추고 예약된 오실레이터는 계속 재생되던 문제 수정.
+- `masterGain` 노드로 즉시 음소거/복구, 게임 플레이 중일 때만 토글 ON 시 BGM 재시작.
