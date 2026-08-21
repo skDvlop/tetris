@@ -82,10 +82,22 @@ body {
 
 .btn--header {
   width: auto;
-  padding: 0.5rem 0.875rem;
-  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  border-width: 2px;
+  box-shadow: 2px 2px 0 var(--color-border);
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.btn--header:hover {
+  box-shadow: 1px 1px 0 var(--color-border);
+}
+
+.btn--header:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
 
 .controls-modal {
