@@ -15,9 +15,8 @@
   <main class="main-content">
     <section id="auth-gate" class="auth-gate" hidden>
       <div class="auth-gate__inner">
-        <p class="auth-gate__lead">게임을 시작하려면 로그인하거나 회원가입하세요.</p>
-        <div class="auth-gate__cards">
-          <div class="panel-card panel-card--auth">
+        <div class="panel-card panel-card--auth">
+          <div id="auth-login-panel" class="auth-panel">
             <h2 class="panel-card__title">로그인</h2>
             <p id="login-message" class="auth-message" aria-live="polite"></p>
             <form id="login-form" class="auth-form">
@@ -29,11 +28,14 @@
                 비밀번호
                 <input id="login-password" class="auth-form__input" type="password" autocomplete="current-password" minlength="6" required>
               </label>
-              <button id="login-submit" class="btn btn--secondary" type="submit">로그인</button>
+              <div class="auth-form__actions">
+                <button id="login-submit" class="btn btn--secondary" type="submit">로그인</button>
+                <button id="show-register-btn" class="btn btn--ghost" type="button">회원가입</button>
+              </div>
             </form>
           </div>
 
-          <div class="panel-card panel-card--auth">
+          <div id="auth-register-panel" class="auth-panel" hidden>
             <h2 class="panel-card__title">회원가입</h2>
             <p id="register-message" class="auth-message" aria-live="polite"></p>
             <form id="register-form" class="auth-form">
@@ -45,7 +47,10 @@
                 비밀번호
                 <input id="register-password" class="auth-form__input" type="password" autocomplete="new-password" minlength="6" required>
               </label>
-              <button id="register-submit" class="btn btn--secondary" type="submit">회원가입</button>
+              <div class="auth-form__actions">
+                <button id="register-submit" class="btn btn--secondary" type="submit">회원가입</button>
+                <button id="show-login-btn" class="btn btn--ghost" type="button">로그인</button>
+              </div>
             </form>
           </div>
         </div>

@@ -115,6 +115,8 @@ const TetrisAPI = {
 const authGate = document.getElementById('auth-gate');
 const gameArea = document.getElementById('game-area');
 const authLoggedInEl = document.getElementById('auth-logged-in');
+const authLoginPanel = document.getElementById('auth-login-panel');
+const authRegisterPanel = document.getElementById('auth-register-panel');
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
 const loginEmailInput = document.getElementById('login-email');
@@ -123,6 +125,8 @@ const registerEmailInput = document.getElementById('register-email');
 const registerPasswordInput = document.getElementById('register-password');
 const loginSubmitBtn = document.getElementById('login-submit');
 const registerSubmitBtn = document.getElementById('register-submit');
+const showRegisterBtn = document.getElementById('show-register-btn');
+const showLoginBtn = document.getElementById('show-login-btn');
 const loginMessageEl = document.getElementById('login-message');
 const registerMessageEl = document.getElementById('register-message');
 const authUserEmailEl = document.getElementById('auth-user-email');
@@ -143,6 +147,20 @@ function clearGuestForms() {
   setMessage(registerMessageEl, '');
 }
 
+function showLoginPanel(message = '', isError = false) {
+  authLoginPanel.hidden = false;
+  authRegisterPanel.hidden = true;
+  setMessage(registerMessageEl, '');
+  setMessage(loginMessageEl, message, isError);
+}
+
+function showRegisterPanel() {
+  authLoginPanel.hidden = true;
+  authRegisterPanel.hidden = false;
+  setMessage(loginMessageEl, '');
+  setMessage(registerMessageEl, '');
+}
+
 function updateAuthUI() {
   const backend = TetrisAPI.isBackendMode();
   const loggedIn = TetrisAPI.isLoggedIn();
@@ -154,6 +172,8 @@ function updateAuthUI() {
 
     if (loggedIn) {
       authUserEmailEl.textContent = TetrisAPI.email || '';
+    } else {
+      showLoginPanel();
     }
   } else {
     authGate.hidden = true;
@@ -247,7 +267,7 @@ registerForm?.addEventListener('submit', async (event) => {
   try {
     await TetrisAPI.register(email, password);
     registerForm.reset();
-    setMessage(registerMessageEl, '가입 완료! 아래 로그인 폼에서 로그인하세요.');
+    showLoginPanel('회원가입 완료! 로그인해 주세요.');
   } catch (error) {
     setMessage(registerMessageEl, error.message, true);
   } finally {
@@ -261,8 +281,17 @@ logoutBtn?.addEventListener('click', () => {
   }
   TetrisAPI.logout();
   clearGuestForms();
+  showLoginPanel();
   updateAuthUI();
   refreshHighScore();
+});
+
+showRegisterBtn?.addEventListener('click', () => {
+  showRegisterPanel();
+});
+
+showLoginBtn?.addEventListener('click', () => {
+  showLoginPanel();
 });
 
 async function initAPI() {
