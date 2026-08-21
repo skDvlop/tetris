@@ -23,6 +23,33 @@
     </section>
 
     <aside class="game__panel">
+      <div id="auth-section" class="panel-card panel-card--auth" hidden>
+        <h2 class="panel-card__title">로그인</h2>
+        <p id="auth-message" class="auth-message" aria-live="polite"></p>
+        <form id="auth-form" class="auth-form">
+          <label class="auth-form__label">
+            이메일
+            <input id="auth-email" class="auth-form__input" type="email" autocomplete="email" required>
+          </label>
+          <label class="auth-form__label">
+            비밀번호
+            <input id="auth-password" class="auth-form__input" type="password" autocomplete="current-password" minlength="6" required>
+          </label>
+          <button id="auth-submit" class="btn btn--secondary" type="submit">로그인</button>
+          <button id="auth-toggle-mode" class="btn btn--ghost" type="button">회원가입</button>
+        </form>
+        <div id="auth-logged-in" class="auth-logged-in" hidden>
+          <p class="auth-logged-in__email"><span id="auth-user-email"></span></p>
+          <button id="logout-btn" class="btn btn--secondary" type="button">로그아웃</button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h2 class="panel-card__title">전체 최고 점수</h2>
+        <p id="high-score" class="panel-card__score">—</p>
+        <p id="high-score-meta" class="panel-card__meta">백엔드 미연결</p>
+      </div>
+
       <div class="panel-card">
         <h2 class="panel-card__title">점수</h2>
         <p id="score" class="panel-card__score">0</p>
@@ -55,6 +82,7 @@
   </main>
 
   <script src="music.js"></script>
+  <script src="api.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

@@ -302,13 +302,39 @@ function drawOverlay(text) {
 }
 
 function showStartOverlay(label) {
-  startBtn.textContent = label;
+  if (window.TetrisAPI?.isBackendMode() && !window.TetrisAPI.isLoggedIn()) {
+    startBtn.textContent = '로그인 필요';
+    startBtn.disabled = true;
+  } else {
+    startBtn.textContent = label;
+    startBtn.disabled = false;
+  }
   startOverlay.hidden = false;
 }
 
 function hideStartOverlay() {
   startOverlay.hidden = true;
 }
+
+function canStartGame() {
+  const api = window.TetrisAPI;
+  if (api?.isBackendMode() && !api.isLoggedIn()) {
+    setStatus('로그인 필요');
+    return false;
+  }
+  return true;
+}
+
+window.updateGameAuthState = function updateGameAuthState() {
+  if (gameState === 'idle' || gameState === 'gameover') {
+    showStartOverlay(gameState === 'gameover' ? 'Restart' : 'Start');
+  }
+  if (window.TetrisAPI?.isBackendMode() && !window.TetrisAPI.isLoggedIn()) {
+    setStatus('로그인 필요');
+  } else if (gameState === 'idle') {
+    setStatus('대기 중');
+  }
+};
 
 function render() {
   drawBoard();
@@ -348,6 +374,8 @@ function toggleMusic() {
 }
 
 function startGame() {
+  if (!canStartGame()) return;
+
   board = createBoard();
   score = 0;
   scoreEl.textContent = '0';
@@ -398,10 +426,23 @@ function setGameOver() {
   updatePauseButton();
   showStartOverlay('Restart');
   render();
+
+  const api = window.TetrisAPI;
+  if (api?.isBackendMode() && api.isLoggedIn()) {
+    void api.submitPlay(score, level).then(() => {
+      if (typeof window.refreshHighScore === 'function') {
+        return window.refreshHighScore();
+      }
+      return null;
+    }).catch(() => {
+      setStatus('게임 오버 (기록 저장 실패)');
+    });
+  }
 }
 
 function restartGame() {
   if (gameState === 'idle' || gameState === 'gameover') {
+    if (!canStartGame()) return;
     startGame();
   }
 }

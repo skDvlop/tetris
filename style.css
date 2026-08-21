@@ -166,6 +166,87 @@ body {
   text-transform: uppercase;
 }
 
+.panel-card__meta {
+  margin-top: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  word-break: break-all;
+}
+
+.panel-card--auth .auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.auth-form__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.auth-form__input {
+  padding: 0.5rem 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.auth-form__input:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.auth-message {
+  min-height: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.auth-message--error {
+  color: var(--color-accent);
+}
+
+.auth-logged-in__email {
+  margin-bottom: 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-text);
+  box-shadow: none;
+  border: 2px dashed var(--color-border);
+}
+
+.btn--ghost:hover {
+  background: var(--color-accent-2);
+  box-shadow: none;
+  transform: none;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 4px 4px 0 var(--color-border);
+}
+
 .controls-list {
   list-style: none;
   font-family: var(--font-mono);
@@ -280,6 +361,7 @@ kbd {
   }
 
   .panel-card--controls,
+  .panel-card--auth,
   .game__panel > .btn {
     grid-column: 1 / -1;
   }
