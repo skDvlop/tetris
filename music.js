@@ -75,8 +75,8 @@ const TetrisMusic = {
     return t;
   },
 
-  canPlay(session) {
-    return this.enabled && this.playing && session === this.sessionId;
+  shouldContinue(session) {
+    return this.enabled && session === this.sessionId;
   },
 
   async start() {
@@ -88,14 +88,14 @@ const TetrisMusic = {
     if (this.ctx.state === 'suspended') {
       await this.ctx.resume();
     }
-    if (!this.canPlay(session)) return;
+    if (!this.shouldContinue(session)) return;
 
     if (this.playing) return;
 
     this.playing = true;
 
     const loop = () => {
-      if (!this.canPlay(session)) return;
+      if (!this.playing || !this.shouldContinue(session)) return;
 
       const startAt = this.ctx.currentTime + 0.05;
       this.scheduleMelody(startAt);
