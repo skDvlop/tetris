@@ -33,6 +33,7 @@ const TetrisMusic = {
   loopTimer: null,
   melodyDuration: 0,
   sessionId: 0,
+  activeOscillators: [],
 
   init() {
     if (this.ctx && this.ctx.state !== 'closed') {
@@ -44,7 +45,15 @@ const TetrisMusic = {
     this.masterGain = this.ctx.createGain();
     this.masterGain.gain.value = 1;
     this.masterGain.connect(this.ctx.destination);
+    this.activeOscillators = [];
     this.melodyDuration = KOROBEINIKI.reduce((sum, [, dur]) => sum + dur * TEMPO_SCALE, 0);
+  },
+
+  removeOscillator(osc) {
+    const index = this.activeOscillators.indexOf(osc);
+    if (index >= 0) {
+      this.activeOscillators.splice(index, 1);
+    }
   },
 
   playNote(freq, startTime, duration) {
@@ -61,6 +70,9 @@ const TetrisMusic = {
     osc.connect(gain);
     gain.connect(this.masterGain);
 
+    this.activeOscillators.push(osc);
+    osc.onended = () => this.removeOscillator(osc);
+
     osc.start(startTime);
     osc.stop(startTime + duration);
   },
@@ -73,6 +85,37 @@ const TetrisMusic = {
       t += scaled;
     }
     return t;
+  },
+
+  silenceImmediately() {
+    if (this.masterGain && this.ctx) {
+      const t = this.ctx.currentTime;
+      this.masterGain.gain.cancelScheduledValues(t);
+      this.masterGain.gain.setValueAtTime(0, t);
+      try {
+        this.masterGain.disconnect();
+      } catch (_) {
+        // already disconnected
+      }
+    }
+
+    if (this.ctx) {
+      const t = this.ctx.currentTime;
+      for (const osc of this.activeOscillators) {
+        try {
+          osc.stop(t);
+        } catch (_) {
+          // already stopped
+        }
+        try {
+          osc.disconnect();
+        } catch (_) {
+          // already disconnected
+        }
+      }
+    }
+
+    this.activeOscillators = [];
   },
 
   shouldContinue(session) {
@@ -114,10 +157,13 @@ const TetrisMusic = {
       this.loopTimer = null;
     }
 
+    this.silenceImmediately();
+
     if (this.ctx) {
-      void this.ctx.close();
+      const ctx = this.ctx;
       this.ctx = null;
       this.masterGain = null;
+      void ctx.close();
     }
   },
 

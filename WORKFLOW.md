@@ -288,3 +288,18 @@ README.md 파일에 github pages 주소를 기록하고 commit log에도 github 
 
 - `start()` 비동기 `resume()` 이후 `enabled` 재확인 없이 BGM이 다시 켜지던 race condition 수정.
 - `stop()` 시 `AudioContext.close()`로 예약된 오실레이터 즉시 종료, `sessionId`로 stale 루프 무효화.
+
+---
+
+## 2026-08-21 — 일시정지/음악끄기 즉시 무음
+
+### 프롬프트
+
+```
+일단  일시정지든 음악끄기 버튼을 누르면 바로 음악이 종료되게 해야하는데 음악이 흐르다가 종료된다.
+```
+
+### 결과 (요약)
+
+- `ctx.close()`는 비동기라 소리가 남던 문제 → `silenceImmediately()` 추가.
+- masterGain 즉시 0·disconnect, 활성 오실레이터 `stop()`/`disconnect()` 후 context 종료.
