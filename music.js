@@ -28,6 +28,7 @@ const KOROBEINIKI = [
 const TetrisMusic = {
   ctx: null,
   playing: false,
+  enabled: true,
   loopTimer: null,
   melodyDuration: 0,
 
@@ -67,6 +68,7 @@ const TetrisMusic = {
   },
 
   async start() {
+    if (!this.enabled) return;
     this.init();
     if (this.ctx.state === 'suspended') {
       await this.ctx.resume();
@@ -93,5 +95,19 @@ const TetrisMusic = {
 
   pause() {
     this.stop();
+  },
+
+  toggle() {
+    this.enabled = !this.enabled;
+    if (this.enabled) {
+      this.start();
+    } else {
+      this.stop();
+    }
+    return this.enabled;
+  },
+
+  isEnabled() {
+    return this.enabled;
   },
 };

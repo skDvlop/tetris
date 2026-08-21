@@ -68,6 +68,7 @@ const statusEl = document.getElementById('status');
 const startOverlay = document.getElementById('start-overlay');
 const startBtn = document.getElementById('start-btn');
 const pauseBtn = document.getElementById('pause-btn');
+const musicBtn = document.getElementById('music-btn');
 
 let board = createBoard();
 let currentPiece = null;
@@ -329,6 +330,23 @@ function setStatus(text) {
   statusEl.textContent = text;
 }
 
+function updateMusicButton() {
+  if (TetrisMusic.isEnabled()) {
+    musicBtn.textContent = '음악 끄기';
+    musicBtn.classList.remove('is-off');
+    musicBtn.setAttribute('aria-pressed', 'true');
+  } else {
+    musicBtn.textContent = '음악 켜기';
+    musicBtn.classList.add('is-off');
+    musicBtn.setAttribute('aria-pressed', 'false');
+  }
+}
+
+function toggleMusic() {
+  TetrisMusic.toggle();
+  updateMusicButton();
+}
+
 function startGame() {
   board = createBoard();
   score = 0;
@@ -433,6 +451,7 @@ document.addEventListener('keydown', (event) => {
 
 startBtn.addEventListener('click', restartGame);
 pauseBtn.addEventListener('click', togglePause);
+musicBtn.addEventListener('click', toggleMusic);
 
 function isMobileLayout() {
   return window.matchMedia('(max-width: 768px)').matches;
@@ -498,6 +517,7 @@ window.addEventListener('load', scheduleResize);
 resizeCanvas();
 setStatus('대기 중');
 updatePauseButton();
+updateMusicButton();
 showStartOverlay('Start');
 render();
 requestAnimationFrame(gameLoop);

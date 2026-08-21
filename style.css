@@ -240,6 +240,11 @@ kbd {
   background: var(--color-accent-2);
 }
 
+.btn--secondary.is-off {
+  background: var(--color-text-muted);
+  color: var(--color-surface);
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 1rem;

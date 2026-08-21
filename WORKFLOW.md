@@ -243,3 +243,18 @@ README.md 파일에 github pages 주소를 기록하고 commit log에도 github 
 - `README.md`에 GitHub Pages URL `https://skDvlop.github.io/tetris/` 추가.
 - `DEPLOY.md`, `WORKFLOW.md` 등 미커밋 변경분을 `kosa-vibecoding-2026-5th`에 commit & push.
 - 배포 repo(`~/work/tetris`) README·WORKFLOW 동기화 후 push.
+
+---
+
+## 2026-08-21 — 음악 on/off 버튼
+
+### 프롬프트
+
+```
+그리고 게임에 음악을 켜고 끌 수 있게 버튼을 만들어주고 github 과 github pages에 모두 반영해줘
+```
+
+### 결과 (요약)
+
+- 사이드 패널 **음악 끄기 / 음악 켜기** 버튼 추가, `TetrisMusic.toggle()`·`enabled` 플래그 구현.
+- `kosa-vibecoding-2026-5th` 및 `skDvlop/tetris` 양쪽 repo commit & push → GitHub Pages 반영.

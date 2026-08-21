@@ -12,7 +12,7 @@
 ## 프로젝트 위치
 
 ```
-~/work/tetris
+~/work/kosa-vibecoding-2026-5th/src/exercise/skDev/day02/tetris
 ```
 
 ## 기술 스택
@@ -62,6 +62,7 @@ WSL에서 Windows 브라우저 접속이 안 되면 터미널의 IP 주소(`host
 - Web Audio API 코로베이니키(테트리스) BGM
 - **레벨** 시스템: 30초마다 레벨 +1, 레벨이 오를수록 블록 낙하 속도 증가
 - **Pause** 버튼(사이드 패널)으로 게임·BGM 일시 정지 / 재개
+- **음악 켜기 / 끄기** 버튼으로 BGM on/off
 
 ## 파일 구성
 
