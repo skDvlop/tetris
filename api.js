@@ -112,8 +112,8 @@ const TetrisAPI = {
   },
 };
 
-const authSection = document.getElementById('auth-section');
-const authGuest = document.getElementById('auth-guest');
+const authGate = document.getElementById('auth-gate');
+const gameArea = document.getElementById('game-area');
 const authLoggedInEl = document.getElementById('auth-logged-in');
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
@@ -145,21 +145,28 @@ function clearGuestForms() {
 
 function updateAuthUI() {
   const backend = TetrisAPI.isBackendMode();
-  if (!authSection) return;
-
-  authSection.hidden = !backend;
-  if (!backend) return;
-
   const loggedIn = TetrisAPI.isLoggedIn();
-  authGuest.hidden = loggedIn;
-  authLoggedInEl.hidden = !loggedIn;
 
-  if (loggedIn) {
-    authUserEmailEl.textContent = TetrisAPI.email || '';
+  if (backend) {
+    authGate.hidden = loggedIn;
+    gameArea.hidden = !loggedIn;
+    authLoggedInEl.hidden = !loggedIn;
+
+    if (loggedIn) {
+      authUserEmailEl.textContent = TetrisAPI.email || '';
+    }
+  } else {
+    authGate.hidden = true;
+    gameArea.hidden = false;
+    authLoggedInEl.hidden = true;
   }
 
   if (typeof window.updateGameAuthState === 'function') {
     window.updateGameAuthState();
+  }
+
+  if (loggedIn && typeof window.onGameAreaShown === 'function') {
+    window.onGameAreaShown();
   }
 }
 
@@ -249,6 +256,9 @@ registerForm?.addEventListener('submit', async (event) => {
 });
 
 logoutBtn?.addEventListener('click', () => {
+  if (typeof window.resetGameForLogout === 'function') {
+    window.resetGameForLogout();
+  }
   TetrisAPI.logout();
   clearGuestForms();
   updateAuthUI();
