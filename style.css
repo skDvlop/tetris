@@ -154,6 +154,40 @@ body {
   background: var(--color-board-bg);
   border: 3px solid var(--color-border);
   max-width: 100%;
+  touch-action: none;
+}
+
+.touch-controls {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  width: 100%;
+  touch-action: manipulation;
+}
+
+.touch-controls__btn {
+  min-height: 3rem;
+  padding: 0.75rem;
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-weight: 900;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 3px solid var(--color-border);
+  box-shadow: 3px 3px 0 var(--color-border);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.touch-controls__btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.touch-controls__btn--wide {
+  grid-column: span 1;
 }
 
 .game__panel {
@@ -423,6 +457,31 @@ kbd {
   .panel-card__level {
     font-size: 1.75rem;
   }
+
+  .touch-controls {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .touch-controls__btn[data-action="left"] {
+    grid-column: 1 / 3;
+  }
+
+  .touch-controls__btn[data-action="rotate"] {
+    grid-column: 3 / 5;
+  }
+
+  .touch-controls__btn[data-action="right"] {
+    grid-column: 5 / 7;
+  }
+
+  .touch-controls__btn[data-action="down"] {
+    grid-column: 1 / 4;
+  }
+
+  .touch-controls__btn[data-action="hard"] {
+    grid-column: 4 / 7;
+  }
 }
 
 @media (max-width: 900px) and (orientation: landscape) {
@@ -480,5 +539,38 @@ kbd {
   .btn {
     padding: 0.5rem 0.75rem;
     font-size: 0.75rem;
+  }
+
+  .touch-controls {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin-top: 0.5rem;
+  }
+
+  .touch-controls__btn {
+    min-height: 2.5rem;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .touch-controls__btn[data-action="left"] {
+    grid-column: 1;
+  }
+
+  .touch-controls__btn[data-action="rotate"] {
+    grid-column: 2;
+  }
+
+  .touch-controls__btn[data-action="right"] {
+    grid-column: 3;
+  }
+
+  .touch-controls__btn[data-action="down"] {
+    grid-column: 4;
+  }
+
+  .touch-controls__btn[data-action="hard"] {
+    grid-column: 5;
+    font-size: 0.625rem;
   }
 }

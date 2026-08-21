@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Tetris MVP</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -61,11 +61,18 @@
       <section class="game__board-wrap">
         <div class="game__board-inner">
           <canvas id="board" class="game__canvas" aria-label="테트리스 게임 보드"></canvas>
-          <div id="start-overlay" class="game__overlay">
-            <button id="start-btn" class="btn btn--overlay" type="button">Start</button>
-          </div>
+        <div id="start-overlay" class="game__overlay">
+          <button id="start-btn" class="btn btn--overlay" type="button">Start</button>
         </div>
-      </section>
+      </div>
+      <div id="touch-controls" class="touch-controls" aria-label="터치 조작">
+        <button class="touch-controls__btn" type="button" data-action="left" aria-label="왼쪽">←</button>
+        <button class="touch-controls__btn" type="button" data-action="rotate" aria-label="회전">↻</button>
+        <button class="touch-controls__btn" type="button" data-action="right" aria-label="오른쪽">→</button>
+        <button class="touch-controls__btn touch-controls__btn--wide" type="button" data-action="down" aria-label="아래">↓</button>
+        <button class="touch-controls__btn touch-controls__btn--wide" type="button" data-action="hard" aria-label="하드 드롭">DROP</button>
+      </div>
+    </section>
 
       <aside class="game__panel">
         <div id="auth-logged-in" class="panel-card panel-card--auth" hidden>

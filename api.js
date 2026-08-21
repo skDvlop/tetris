@@ -134,6 +134,11 @@ const logoutBtn = document.getElementById('logout-btn');
 const highScoreEl = document.getElementById('high-score');
 const highScoreMetaEl = document.getElementById('high-score-meta');
 
+if (TetrisAPI.IS_PAGES) {
+  authGate.hidden = true;
+  gameArea.hidden = false;
+}
+
 function setMessage(el, text, isError = false) {
   if (!el) return;
   el.textContent = text;
@@ -185,7 +190,8 @@ function updateAuthUI() {
     window.updateGameAuthState();
   }
 
-  if (loggedIn && typeof window.onGameAreaShown === 'function') {
+  const showGame = !backend || loggedIn;
+  if (showGame && typeof window.onGameAreaShown === 'function') {
     window.onGameAreaShown();
   }
 }

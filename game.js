@@ -462,6 +462,60 @@ function restartGame() {
   }
 }
 
+function applyGameInput(key) {
+  if (gameState !== 'playing') return;
+
+  switch (key) {
+    case 'ArrowLeft':
+      movePiece(-1, 0);
+      break;
+    case 'ArrowRight':
+      movePiece(1, 0);
+      break;
+    case 'ArrowDown':
+      softDropStep();
+      lastDropTime = performance.now();
+      break;
+    case 'ArrowUp':
+      rotatePiece();
+      break;
+    case ' ':
+      hardDrop();
+      break;
+    default:
+      return;
+  }
+  render();
+}
+
+function setupTouchControls() {
+  const touchControls = document.getElementById('touch-controls');
+  if (!touchControls) return;
+
+  const actionMap = {
+    left: 'ArrowLeft',
+    right: 'ArrowRight',
+    down: 'ArrowDown',
+    rotate: 'ArrowUp',
+    hard: ' ',
+  };
+
+  touchControls.querySelectorAll('[data-action]').forEach((btn) => {
+    const handleAction = (event) => {
+      event.preventDefault();
+      if (gameState !== 'playing') return;
+      const key = actionMap[btn.dataset.action];
+      if (key) applyGameInput(key);
+    };
+
+    btn.addEventListener('touchstart', handleAction, { passive: false });
+    btn.addEventListener('click', (event) => {
+      if (event.pointerType === 'touch') return;
+      handleAction(event);
+    });
+  });
+}
+
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
     if (gameState === 'idle' || gameState === 'gameover') {
@@ -479,35 +533,22 @@ document.addEventListener('keydown', (event) => {
 
   switch (event.key) {
     case 'ArrowLeft':
-      event.preventDefault();
-      movePiece(-1, 0);
-      break;
     case 'ArrowRight':
-      event.preventDefault();
-      movePiece(1, 0);
-      break;
     case 'ArrowDown':
-      event.preventDefault();
-      softDropStep();
-      lastDropTime = performance.now();
-      break;
     case 'ArrowUp':
-      event.preventDefault();
-      rotatePiece();
-      break;
     case ' ':
       event.preventDefault();
-      hardDrop();
+      applyGameInput(event.key);
       break;
     default:
       break;
   }
-  render();
 });
 
 startBtn.addEventListener('click', restartGame);
 pauseBtn.addEventListener('click', togglePause);
 musicBtn.addEventListener('click', toggleMusic);
+setupTouchControls();
 
 function isMobileLayout() {
   return window.matchMedia('(max-width: 768px)').matches;
@@ -524,8 +565,12 @@ function getViewportHeight() {
 function resizeCanvas() {
   const header = document.querySelector('.header');
   const panel = document.querySelector('.game__panel');
+  const touchControls = document.getElementById('touch-controls');
   const headerHeight = header ? header.offsetHeight : 0;
   const panelHeight = panel && !isLandscapeMobile() ? panel.offsetHeight : 0;
+  const touchHeight = touchControls && isMobileLayout() && getComputedStyle(touchControls).display !== 'none'
+    ? touchControls.offsetHeight + 12
+    : 0;
   const padding = isMobileLayout() ? 20 : 48;
   const viewportHeight = getViewportHeight();
   const viewportWidth = window.visualViewport ? window.visualViewport.width : window.innerWidth;
@@ -539,7 +584,7 @@ function resizeCanvas() {
     maxBoardHeight = (maxBoardWidth / COLS) * ROWS;
   } else if (isMobileLayout()) {
     maxBoardWidth = Math.min(viewportWidth - padding * 2, 360);
-    const availableHeight = viewportHeight - headerHeight - panelHeight - padding * 3;
+    const availableHeight = viewportHeight - headerHeight - panelHeight - touchHeight - padding * 3;
     maxBoardHeight = Math.min((maxBoardWidth / COLS) * ROWS, Math.max(availableHeight, 200));
     maxBoardWidth = (maxBoardHeight / ROWS) * COLS;
   } else {
@@ -568,9 +613,16 @@ if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', scheduleResize);
 }
 
-window.addEventListener('load', scheduleResize);
+window.addEventListener('load', () => {
+  scheduleResize();
+  if (!document.getElementById('game-area')?.hidden) {
+    resizeCanvas();
+  }
+});
 
-resizeCanvas();
+if (!document.getElementById('game-area')?.hidden) {
+  resizeCanvas();
+}
 setStatus('대기 중');
 updatePauseButton();
 updateMusicButton();
