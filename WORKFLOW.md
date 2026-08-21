@@ -211,3 +211,19 @@ bgm 속도가 너무 빠른데 좀 조정했으면 좋겠고 배경을 브래던
 - `DEPLOY.md`를 `skDvlop/tetris` 단일 repo(monorepo) + SSH + GitHub Pages 기준으로 재작성.
 - 공용 실습 repo 복사·`tetris-pages` 분리 방식·`{github-id}` placeholder 제거.
 - 로컬 작업 경로 `~/work/tetris`, Pages URL `https://skDvlop.github.io/tetris/` 명시.
+
+---
+
+## 2026-08-21 — GitHub Pages 배포 실행 (skDvlop/tetris)
+
+### 프롬프트
+
+```
+지금 만든 테트리스 게임을 github 페이지에 올릴 수 있게 cmd agent에서 진행하고 싶어
+```
+
+### 결과 (요약)
+
+- `~/work/tetris` 로컬 repo 생성, 게임 파일 9개 복사 후 `git@github.com:skDvlop/tetris.git`에 push 완료.
+- GitHub Actions `deploy-pages.yml` 워크플로 추가·push (Pages 미활성화로 첫 실행 실패 — Settings에서 Pages 활성화 필요).
+- **남은 1단계(수동)**: GitHub → skDvlop/tetris → Settings → Pages → `main` / root (또는 GitHub Actions) 활성화.

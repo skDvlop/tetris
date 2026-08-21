@@ -135,6 +135,9 @@ git push origin main
 
 1~2분 후 배포 URL이 표시됩니다.
 
+> **Agent 배포 시 참고:** 코드 push만으로는 Pages가 켜지지 않습니다. 최초 1회 아래 설정을 GitHub 웹에서 직접 저장해야 합니다.  
+> [https://github.com/skDvlop/tetris/settings/pages](https://github.com/skDvlop/tetris/settings/pages)
+
 ### GitHub CLI
 
 ```bash
