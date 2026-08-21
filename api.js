@@ -208,7 +208,7 @@ function updateHighScoreUI(data) {
 
   if (!TetrisAPI.isBackendMode()) {
     highScoreEl.textContent = '—';
-    highScoreMetaEl.textContent = '백엔드 미연결';
+    highScoreMetaEl.textContent = '';
     return;
   }
 
@@ -233,7 +233,7 @@ async function refreshHighScore() {
     updateHighScoreUI(data);
   } catch (_) {
     highScoreEl.textContent = '—';
-    highScoreMetaEl.textContent = '불러오기 실패';
+    highScoreMetaEl.textContent = '';
   }
 }
 

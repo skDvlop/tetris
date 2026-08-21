@@ -80,26 +80,6 @@ body {
   color: var(--color-text-muted);
 }
 
-.btn--header {
-  width: auto;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.625rem;
-  letter-spacing: 0.04em;
-  border-width: 2px;
-  box-shadow: 2px 2px 0 var(--color-border);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.btn--header:hover {
-  box-shadow: 1px 1px 0 var(--color-border);
-}
-
-.btn--header:active {
-  transform: translate(2px, 2px);
-  box-shadow: none;
-}
-
 .controls-modal {
   position: fixed;
   inset: 0;
@@ -548,6 +528,35 @@ kbd {
 .btn--secondary.is-off {
   background: var(--color-text-muted);
   color: var(--color-surface);
+}
+
+.btn.btn--header {
+  width: auto;
+  min-height: unset;
+  padding: 0.1875rem 0.4375rem;
+  font-size: 0.5625rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  border-width: 2px;
+  box-shadow: 2px 2px 0 var(--color-border);
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.btn.btn--header:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--color-border);
+}
+
+.btn.btn--header:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.panel-card__meta:empty {
+  display: none;
+  margin: 0;
 }
 
 @media (max-width: 768px) {
