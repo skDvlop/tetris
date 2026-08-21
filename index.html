@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tetris MVP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <h1 class="header__title">Tetris</h1>
+    <p class="header__subtitle">키보드로 블록을 이동하고 줄을 없애 점수를 올려 보세요.</p>
+  </header>
+
+  <main class="game">
+    <section class="game__board-wrap">
+      <div class="game__board-inner">
+        <canvas id="board" class="game__canvas" aria-label="테트리스 게임 보드"></canvas>
+        <div id="start-overlay" class="game__overlay">
+          <button id="start-btn" class="btn btn--overlay" type="button">Start</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="game__panel">
+      <div class="panel-card">
+        <h2 class="panel-card__title">점수</h2>
+        <p id="score" class="panel-card__score">0</p>
+      </div>
+
+      <div class="panel-card">
+        <h2 class="panel-card__title">레벨</h2>
+        <p id="level" class="panel-card__level">1</p>
+      </div>
+
+      <div class="panel-card">
+        <h2 class="panel-card__title">상태</h2>
+        <p id="status" class="panel-card__status">대기 중</p>
+      </div>
+
+      <div class="panel-card panel-card--controls">
+        <h2 class="panel-card__title">조작</h2>
+        <ul class="controls-list">
+          <li><kbd>←</kbd> <kbd>→</kbd> 좌우 이동</li>
+          <li><kbd>↓</kbd> 빠르게 내리기</li>
+          <li><kbd>↑</kbd> 회전</li>
+          <li><kbd>Space</kbd> 하드 드롭</li>
+          <li><kbd>P</kbd> 일시 정지 / 재개</li>
+        </ul>
+      </div>
+
+      <button id="pause-btn" class="btn btn--secondary" type="button" disabled>게임 일시정지</button>
+    </aside>
+  </main>
+
+  <script src="music.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
