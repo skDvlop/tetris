@@ -137,6 +137,9 @@ const highScoreMetaEl = document.getElementById('high-score-meta');
 if (TetrisAPI.IS_PAGES) {
   authGate.hidden = true;
   gameArea.hidden = false;
+  if (typeof window.updateControlsHelpVisibility === 'function') {
+    window.updateControlsHelpVisibility();
+  }
 }
 
 function setMessage(el, text, isError = false) {
@@ -193,6 +196,10 @@ function updateAuthUI() {
   const showGame = !backend || loggedIn;
   if (showGame && typeof window.onGameAreaShown === 'function') {
     window.onGameAreaShown();
+  }
+
+  if (typeof window.updateControlsHelpVisibility === 'function') {
+    window.updateControlsHelpVisibility();
   }
 }
 

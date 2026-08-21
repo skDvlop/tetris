@@ -64,6 +64,7 @@ const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
 const scoreEl = document.getElementById('score');
 const levelEl = document.getElementById('level');
+const playTimeEl = document.getElementById('play-time');
 const statusEl = document.getElementById('status');
 const startOverlay = document.getElementById('start-overlay');
 const startBtn = document.getElementById('start-btn');
@@ -79,15 +80,28 @@ let lastDropTime = 0;
 let gameStartTime = 0;
 let pausedAt = 0;
 let totalPausedMs = 0;
+let lastElapsedPlayMs = 0;
 
 function getDropInterval(lvl) {
   return Math.max(MIN_DROP_INTERVAL, BASE_DROP_INTERVAL - (lvl - 1) * DROP_INTERVAL_STEP);
 }
 
 function getElapsedPlayTime() {
-  if (gameState === 'idle' || gameState === 'gameover') return 0;
+  if (gameState === 'idle') return 0;
+  if (gameState === 'gameover') return lastElapsedPlayMs;
   const now = gameState === 'paused' ? pausedAt : performance.now();
   return now - gameStartTime - totalPausedMs;
+}
+
+function formatPlayTime(ms) {
+  const totalSec = Math.floor(ms / 1000);
+  return `${totalSec}s`;
+}
+
+function updatePlayTimeDisplay() {
+  if (playTimeEl) {
+    playTimeEl.textContent = formatPlayTime(getElapsedPlayTime());
+  }
 }
 
 function updateLevelFromTime() {
@@ -96,6 +110,7 @@ function updateLevelFromTime() {
     level = nextLevel;
     levelEl.textContent = String(level);
   }
+  updatePlayTimeDisplay();
 }
 
 function resetLevelState() {
@@ -104,6 +119,8 @@ function resetLevelState() {
   gameStartTime = performance.now();
   totalPausedMs = 0;
   pausedAt = 0;
+  lastElapsedPlayMs = 0;
+  updatePlayTimeDisplay();
 }
 
 function createBoard() {
@@ -363,6 +380,9 @@ function render() {
 
 function gameLoop(timestamp) {
   tickDrop(timestamp);
+  if (gameState === 'playing') {
+    updatePlayTimeDisplay();
+  }
   render();
   requestAnimationFrame(gameLoop);
 }
@@ -435,8 +455,10 @@ function togglePause() {
 }
 
 function setGameOver() {
+  lastElapsedPlayMs = getElapsedPlayTime();
   gameState = 'gameover';
   setStatus('게임 오버');
+  updatePlayTimeDisplay();
   TetrisMusic.stop();
   updatePauseButton();
   showStartOverlay('Restart');
@@ -545,10 +567,43 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+function setupControlsModal() {
+  const modal = document.getElementById('controls-modal');
+  const helpBtn = document.getElementById('controls-help-btn');
+  const closeBtn = document.getElementById('controls-modal-close');
+  if (!modal || !helpBtn) return;
+
+  const openModal = () => {
+    modal.hidden = false;
+  };
+
+  const closeModal = () => {
+    modal.hidden = true;
+  };
+
+  helpBtn.addEventListener('click', openModal);
+  closeBtn?.addEventListener('click', closeModal);
+  modal.querySelectorAll('[data-close-modal]').forEach((el) => {
+    el.addEventListener('click', closeModal);
+  });
+}
+
+function updateControlsHelpVisibility() {
+  const helpBtn = document.getElementById('controls-help-btn');
+  const gameArea = document.getElementById('game-area');
+  if (helpBtn) {
+    helpBtn.hidden = !gameArea || gameArea.hidden;
+  }
+}
+
+window.updateControlsHelpVisibility = updateControlsHelpVisibility;
+
 startBtn.addEventListener('click', restartGame);
 pauseBtn.addEventListener('click', togglePause);
 musicBtn.addEventListener('click', toggleMusic);
 setupTouchControls();
+setupControlsModal();
+updateControlsHelpVisibility();
 
 function isMobileLayout() {
   return window.matchMedia('(max-width: 768px)').matches;
@@ -565,8 +620,10 @@ function getViewportHeight() {
 function resizeCanvas() {
   const header = document.querySelector('.header');
   const panel = document.querySelector('.game__panel');
+  const gameStats = document.querySelector('.game-stats');
   const touchControls = document.getElementById('touch-controls');
   const headerHeight = header ? header.offsetHeight : 0;
+  const statsHeight = gameStats ? gameStats.offsetHeight + 8 : 0;
   const panelHeight = panel && !isLandscapeMobile() ? panel.offsetHeight : 0;
   const touchHeight = touchControls && isMobileLayout() && getComputedStyle(touchControls).display !== 'none'
     ? touchControls.offsetHeight + 12
@@ -584,7 +641,7 @@ function resizeCanvas() {
     maxBoardHeight = (maxBoardWidth / COLS) * ROWS;
   } else if (isMobileLayout()) {
     maxBoardWidth = Math.min(viewportWidth - padding * 2, 360);
-    const availableHeight = viewportHeight - headerHeight - panelHeight - touchHeight - padding * 3;
+    const availableHeight = viewportHeight - headerHeight - statsHeight - panelHeight - touchHeight - padding * 2;
     maxBoardHeight = Math.min((maxBoardWidth / COLS) * ROWS, Math.max(availableHeight, 200));
     maxBoardWidth = (maxBoardHeight / ROWS) * COLS;
   } else {
