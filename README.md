@@ -2,10 +2,17 @@
 
 브라우저에서 바로 실행할 수 있는 간단한 테트리스 게임입니다.
 
+## GitHub Pages
+
+**배포 URL:** [https://skDvlop.github.io/tetris/](https://skDvlop.github.io/tetris/)
+
+- 저장소: [skDvlop/tetris](https://github.com/skDvlop/tetris)
+- 배포 방법: [`DEPLOY.md`](DEPLOY.md)
+
 ## 프로젝트 위치
 
 ```
-~/work/kosa-vibecoding-2026-5th/src/exercise/skDev/day02/tetris
+~/work/tetris
 ```
 
 ## 기술 스택

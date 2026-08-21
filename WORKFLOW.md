@@ -227,3 +227,19 @@ bgm 속도가 너무 빠른데 좀 조정했으면 좋겠고 배경을 브래던
 - `~/work/tetris` 로컬 repo 생성, 게임 파일 9개 복사 후 `git@github.com:skDvlop/tetris.git`에 push 완료.
 - GitHub Actions `deploy-pages.yml` 워크플로 추가·push (Pages 미활성화로 첫 실행 실패 — Settings에서 Pages 활성화 필요).
 - **남은 1단계(수동)**: GitHub → skDvlop/tetris → Settings → Pages → `main` / root (또는 GitHub Actions) 활성화.
+
+---
+
+## 2026-08-21 — README Pages URL 및 commit/push
+
+### 프롬프트
+
+```
+README.md 파일에 github pages 주소를 기록하고 commit log에도 github pages 주소를 넣어줘. 지금까지 수정된 모든 파일들을 commit & push해줘
+```
+
+### 결과 (요약)
+
+- `README.md`에 GitHub Pages URL `https://skDvlop.github.io/tetris/` 추가.
+- `DEPLOY.md`, `WORKFLOW.md` 등 미커밋 변경분을 `kosa-vibecoding-2026-5th`에 commit & push.
+- 배포 repo(`~/work/tetris`) README·WORKFLOW 동기화 후 push.
