@@ -273,3 +273,18 @@ README.md 파일에 github pages 주소를 기록하고 commit log에도 github 
 
 - `stop()`이 루프 타이머만 멈추고 예약된 오실레이터는 계속 재생되던 문제 수정.
 - `masterGain` 노드로 즉시 음소거/복구, 게임 플레이 중일 때만 토글 ON 시 BGM 재시작.
+
+---
+
+## 2026-08-21 — 음악 끄기 race condition 수정
+
+### 프롬프트
+
+```
+음악 끄기 기능이 제대로 동작안하는거 같아
+```
+
+### 결과 (요약)
+
+- `start()` 비동기 `resume()` 이후 `enabled` 재확인 없이 BGM이 다시 켜지던 race condition 수정.
+- `stop()` 시 `AudioContext.close()`로 예약된 오실레이터 즉시 종료, `sessionId`로 stale 루프 무효화.

@@ -32,22 +32,19 @@ const TetrisMusic = {
   enabled: true,
   loopTimer: null,
   melodyDuration: 0,
+  sessionId: 0,
 
   init() {
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-      this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.value = 0;
-      this.masterGain.connect(this.ctx.destination);
+    if (this.ctx && this.ctx.state !== 'closed') {
+      this.melodyDuration = KOROBEINIKI.reduce((sum, [, dur]) => sum + dur * TEMPO_SCALE, 0);
+      return;
     }
-    this.melodyDuration = KOROBEINIKI.reduce((sum, [, dur]) => sum + dur * TEMPO_SCALE, 0);
-  },
 
-  setAudible(audible) {
-    if (!this.masterGain || !this.ctx) return;
-    const t = this.ctx.currentTime;
-    this.masterGain.gain.cancelScheduledValues(t);
-    this.masterGain.gain.setValueAtTime(audible ? 1 : 0, t);
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.masterGain = this.ctx.createGain();
+    this.masterGain.gain.value = 1;
+    this.masterGain.connect(this.ctx.destination);
+    this.melodyDuration = KOROBEINIKI.reduce((sum, [, dur]) => sum + dur * TEMPO_SCALE, 0);
   },
 
   playNote(freq, startTime, duration) {
@@ -78,32 +75,50 @@ const TetrisMusic = {
     return t;
   },
 
+  canPlay(session) {
+    return this.enabled && this.playing && session === this.sessionId;
+  },
+
   async start() {
     if (!this.enabled) return;
+
     this.init();
+    const session = this.sessionId;
+
     if (this.ctx.state === 'suspended') {
       await this.ctx.resume();
     }
-    this.setAudible(true);
+    if (!this.canPlay(session)) return;
+
     if (this.playing) return;
 
     this.playing = true;
+
     const loop = () => {
-      if (!this.playing) return;
+      if (!this.canPlay(session)) return;
+
       const startAt = this.ctx.currentTime + 0.05;
       this.scheduleMelody(startAt);
       this.loopTimer = setTimeout(loop, this.melodyDuration * 1000);
     };
+
     loop();
   },
 
   stop() {
+    this.sessionId += 1;
     this.playing = false;
+
     if (this.loopTimer) {
       clearTimeout(this.loopTimer);
       this.loopTimer = null;
     }
-    this.setAudible(false);
+
+    if (this.ctx) {
+      void this.ctx.close();
+      this.ctx = null;
+      this.masterGain = null;
+    }
   },
 
   pause() {
@@ -115,7 +130,7 @@ const TetrisMusic = {
     if (!this.enabled) {
       this.stop();
     } else if (shouldPlayNow) {
-      this.start();
+      void this.start();
     }
     return this.enabled;
   },
