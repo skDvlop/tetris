@@ -182,11 +182,23 @@ body {
 }
 
 .auth-section {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
 }
 
 .auth-guest {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.auth-guest[hidden],
+.auth-section[hidden],
+#auth-logged-in[hidden] {
+  display: none !important;
 }
 
 .auth-form__label {
