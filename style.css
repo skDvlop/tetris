@@ -181,6 +181,14 @@ body {
   gap: 0.625rem;
 }
 
+.auth-section {
+  display: contents;
+}
+
+.auth-guest {
+  display: contents;
+}
+
 .auth-form__label {
   display: flex;
   flex-direction: column;
@@ -362,6 +370,7 @@ kbd {
 
   .panel-card--controls,
   .panel-card--auth,
+  .auth-section,
   .game__panel > .btn {
     grid-column: 1 / -1;
   }

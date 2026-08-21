@@ -23,22 +23,43 @@
     </section>
 
     <aside class="game__panel">
-      <div id="auth-section" class="panel-card panel-card--auth" hidden>
-        <h2 class="panel-card__title">로그인</h2>
-        <p id="auth-message" class="auth-message" aria-live="polite"></p>
-        <form id="auth-form" class="auth-form">
-          <label class="auth-form__label">
-            이메일
-            <input id="auth-email" class="auth-form__input" type="email" autocomplete="email" required>
-          </label>
-          <label class="auth-form__label">
-            비밀번호
-            <input id="auth-password" class="auth-form__input" type="password" autocomplete="current-password" minlength="6" required>
-          </label>
-          <button id="auth-submit" class="btn btn--secondary" type="submit">로그인</button>
-          <button id="auth-toggle-mode" class="btn btn--ghost" type="button">회원가입</button>
-        </form>
-        <div id="auth-logged-in" class="auth-logged-in" hidden>
+      <div id="auth-section" class="auth-section" hidden>
+        <div id="auth-guest" class="auth-guest">
+          <div class="panel-card panel-card--auth">
+            <h2 class="panel-card__title">로그인</h2>
+            <p id="login-message" class="auth-message" aria-live="polite"></p>
+            <form id="login-form" class="auth-form">
+              <label class="auth-form__label">
+                이메일
+                <input id="login-email" class="auth-form__input" type="email" autocomplete="email" required>
+              </label>
+              <label class="auth-form__label">
+                비밀번호
+                <input id="login-password" class="auth-form__input" type="password" autocomplete="current-password" minlength="6" required>
+              </label>
+              <button id="login-submit" class="btn btn--secondary" type="submit">로그인</button>
+            </form>
+          </div>
+
+          <div class="panel-card panel-card--auth">
+            <h2 class="panel-card__title">회원가입</h2>
+            <p id="register-message" class="auth-message" aria-live="polite"></p>
+            <form id="register-form" class="auth-form">
+              <label class="auth-form__label">
+                이메일
+                <input id="register-email" class="auth-form__input" type="email" autocomplete="email" required>
+              </label>
+              <label class="auth-form__label">
+                비밀번호
+                <input id="register-password" class="auth-form__input" type="password" autocomplete="new-password" minlength="6" required>
+              </label>
+              <button id="register-submit" class="btn btn--secondary" type="submit">회원가입</button>
+            </form>
+          </div>
+        </div>
+
+        <div id="auth-logged-in" class="panel-card panel-card--auth" hidden>
+          <h2 class="panel-card__title">내 계정</h2>
           <p class="auth-logged-in__email"><span id="auth-user-email"></span></p>
           <button id="logout-btn" class="btn btn--secondary" type="button">로그아웃</button>
         </div>

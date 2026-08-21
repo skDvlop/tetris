@@ -79,12 +79,10 @@ const TetrisAPI = {
   },
 
   async register(email, password) {
-    const data = await this.request('/api/auth/register', {
+    return this.request('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    this.saveSession(data.access_token, data.email);
-    return data;
   },
 
   async login(email, password) {
@@ -115,24 +113,34 @@ const TetrisAPI = {
 };
 
 const authSection = document.getElementById('auth-section');
-const authForm = document.getElementById('auth-form');
-const authEmailInput = document.getElementById('auth-email');
-const authPasswordInput = document.getElementById('auth-password');
-const authSubmitBtn = document.getElementById('auth-submit');
-const authToggleBtn = document.getElementById('auth-toggle-mode');
-const authMessageEl = document.getElementById('auth-message');
+const authGuest = document.getElementById('auth-guest');
 const authLoggedInEl = document.getElementById('auth-logged-in');
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+const loginEmailInput = document.getElementById('login-email');
+const loginPasswordInput = document.getElementById('login-password');
+const registerEmailInput = document.getElementById('register-email');
+const registerPasswordInput = document.getElementById('register-password');
+const loginSubmitBtn = document.getElementById('login-submit');
+const registerSubmitBtn = document.getElementById('register-submit');
+const loginMessageEl = document.getElementById('login-message');
+const registerMessageEl = document.getElementById('register-message');
 const authUserEmailEl = document.getElementById('auth-user-email');
 const logoutBtn = document.getElementById('logout-btn');
 const highScoreEl = document.getElementById('high-score');
 const highScoreMetaEl = document.getElementById('high-score-meta');
 
-let authMode = 'login';
+function setMessage(el, text, isError = false) {
+  if (!el) return;
+  el.textContent = text;
+  el.classList.toggle('auth-message--error', isError);
+}
 
-function setAuthMessage(text, isError = false) {
-  if (!authMessageEl) return;
-  authMessageEl.textContent = text;
-  authMessageEl.classList.toggle('auth-message--error', isError);
+function clearGuestForms() {
+  loginForm?.reset();
+  registerForm?.reset();
+  setMessage(loginMessageEl, '');
+  setMessage(registerMessageEl, '');
 }
 
 function updateAuthUI() {
@@ -140,18 +148,14 @@ function updateAuthUI() {
   if (!authSection) return;
 
   authSection.hidden = !backend;
-
   if (!backend) return;
 
   const loggedIn = TetrisAPI.isLoggedIn();
-  authForm.hidden = loggedIn;
+  authGuest.hidden = loggedIn;
   authLoggedInEl.hidden = !loggedIn;
 
   if (loggedIn) {
     authUserEmailEl.textContent = TetrisAPI.email || '';
-  } else {
-    authSubmitBtn.textContent = authMode === 'login' ? '로그인' : '회원가입';
-    authToggleBtn.textContent = authMode === 'login' ? '회원가입' : '로그인';
   }
 
   if (typeof window.updateGameAuthState === 'function') {
@@ -193,47 +197,60 @@ async function refreshHighScore() {
   }
 }
 
-authToggleBtn?.addEventListener('click', () => {
-  authMode = authMode === 'login' ? 'register' : 'login';
-  setAuthMessage('');
-  updateAuthUI();
-});
-
-authForm?.addEventListener('submit', async (event) => {
+loginForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
-  setAuthMessage('');
+  setMessage(loginMessageEl, '');
 
-  const email = authEmailInput.value.trim();
-  const password = authPasswordInput.value;
+  const email = loginEmailInput.value.trim();
+  const password = loginPasswordInput.value;
 
   if (!email || !password) {
-    setAuthMessage('이메일과 비밀번호를 입력하세요.', true);
+    setMessage(loginMessageEl, '이메일과 비밀번호를 입력하세요.', true);
     return;
   }
 
-  authSubmitBtn.disabled = true;
+  loginSubmitBtn.disabled = true;
 
   try {
-    if (authMode === 'register') {
-      await TetrisAPI.register(email, password);
-      setAuthMessage('회원가입 완료!');
-    } else {
-      await TetrisAPI.login(email, password);
-      setAuthMessage('로그인 완료!');
-    }
-    authPasswordInput.value = '';
+    await TetrisAPI.login(email, password);
+    clearGuestForms();
     updateAuthUI();
     await refreshHighScore();
   } catch (error) {
-    setAuthMessage(error.message, true);
+    setMessage(loginMessageEl, error.message, true);
   } finally {
-    authSubmitBtn.disabled = false;
+    loginSubmitBtn.disabled = false;
+  }
+});
+
+registerForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  setMessage(registerMessageEl, '');
+
+  const email = registerEmailInput.value.trim();
+  const password = registerPasswordInput.value;
+
+  if (!email || !password) {
+    setMessage(registerMessageEl, '이메일과 비밀번호를 입력하세요.', true);
+    return;
+  }
+
+  registerSubmitBtn.disabled = true;
+
+  try {
+    await TetrisAPI.register(email, password);
+    registerForm.reset();
+    setMessage(registerMessageEl, '가입 완료! 아래 로그인 폼에서 로그인하세요.');
+  } catch (error) {
+    setMessage(registerMessageEl, error.message, true);
+  } finally {
+    registerSubmitBtn.disabled = false;
   }
 });
 
 logoutBtn?.addEventListener('click', () => {
   TetrisAPI.logout();
-  setAuthMessage('');
+  clearGuestForms();
   updateAuthUI();
   refreshHighScore();
 });
